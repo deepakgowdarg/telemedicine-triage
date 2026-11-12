@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Your Result{% endblock %}
+
+{% block content %}
+{% set colour = {'emergency': 'danger', 'urgent': 'warning', 'routine': 'success'}[r.urgency_level] %}
+
+{% if r.urgency_level == 'emergency' %}
+<div class="alert alert-danger fs-5">
+    <strong>Possible emergency. Call 112 now.</strong>
+    <a href="tel:112" class="btn btn-danger ms-3">CALL 112</a>
+</div>
+{% endif %}
+
+<div class="card p-4">
+    <h2>Preliminary urgency:
+        <span class="badge bg-{{ colour }}">{{ r.urgency_level|upper }}</span>
+    </h2>
+
+    <p class="mt-3"><strong>Recommendation:</strong> {{ r.recommendation }}</p>
+    <p><strong>Rules applied:</strong> {{ r.matched_rules }}</p>
+
+    <p class="mb-1"><strong>Symptoms you reported:</strong></p>
+    <ul>
+        {% for code in r.symptoms.split(',') %}
+        <li>{{ labels.get(code, code) }}</li>
+        {% endfor %}
+    </ul>
+    <p><strong>Duration:</strong> {{ r.duration }}</p>
+
+    <p class="small text-muted">
+        This is a preliminary, rule-based result. It is not a diagnosis.
+        A qualified healthcare professional makes the final decision.
+    </p>
+
+    <a href="{{ url_for('patient.dashboard') }}" class="btn btn-outline-primary">Back to dashboard</a>
+</div>
+{% endblock %}

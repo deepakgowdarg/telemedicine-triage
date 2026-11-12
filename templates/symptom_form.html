@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Submit Symptoms{% endblock %}
+
+{% block content %}
+<div class="alert alert-warning">
+    <strong>Emergency?</strong> If the person may be in danger, call 112 now or open
+    <a href="{{ url_for('emergency') }}">Emergency Quick Access</a>.
+</div>
+
+<div class="card p-4">
+    <h2 class="mb-3">Describe your symptoms</h2>
+    <form method="POST" action="{{ url_for('patient.symptoms') }}">
+        <p class="fw-bold">Select all that apply:</p>
+        {% for code, label in symptoms %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="symptoms" value="{{ code }}" id="s_{{ code }}">
+            <label class="form-check-label" for="s_{{ code }}">{{ label }}</label>
+        </div>
+        {% endfor %}
+
+        <div class="mt-4 mb-3">
+            <label class="form-label fw-bold">How long have you had these symptoms?</label>
+            <select name="duration" class="form-select" required>
+                <option value="">Choose one</option>
+                {% for d in durations %}
+                <option value="{{ d }}">{{ d }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Additional notes (optional)</label>
+            <textarea name="additional_notes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+</div>
+{% endblock %}
