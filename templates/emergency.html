@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Quick Access</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="emergency-page">
+    <h1>Emergency Quick Access</h1>
+
+    <p class="big-warning">If someone may be in danger, call 112 now.</p>
+
+    <a href="tel:112" class="call-button">CALL 112</a>
+
+    <h2>Warning signs that need emergency help</h2>
+    <ul class="warning-list">
+        <li>Severe chest pain or pressure</li>
+        <li>Severe difficulty breathing</li>
+        <li>Sudden collapse or the person does not respond</li>
+        <li>Possible stroke signs: face drooping, arm weakness, slurred speech</li>
+    </ul>
+
+    <h2>What to do</h2>
+    <ol>
+        <li>Call 112 immediately. Do not wait to fill in any form.</li>
+        <li>Stay with the person and keep them calm.</li>
+        <li>Do not give food or drink if the person is unconscious.</li>
+        <li>If the person is not breathing normally, follow the instructions the emergency operator gives you.</li>
+    </ol>
+
+    <p class="note">
+        This page does not diagnose any condition. It only shows warning signs and tells you
+        to contact emergency services. If you are unsure, call 112.
+    </p>
+
+    <p><a href="{{ url_for('index') }}">Back to home</a></p>
+</body>
+</html>
