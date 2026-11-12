@@ -16,9 +16,8 @@
     <h5>Normal consultation</h5>
     <p>For non-emergency symptoms. You need an account.</p>
     <div class="d-flex gap-2">
-        <a href="#" class="btn btn-primary">Register</a>
-        <a href="#" class="btn btn-outline-primary">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Register</a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary">Login</a>
     </div>
-    <p class="small text-muted mt-2">These buttons will be connected on Day 2.</p>
 </div>
 {% endblock %}

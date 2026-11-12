@@ -1,8 +1,13 @@
 from flask import Flask, render_template
 from config import SECRET_KEY
+from routes.auth import auth_bp
+from routes.patient import patient_bp
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
+
+app.register_blueprint(auth_bp)
+app.register_blueprint(patient_bp)
 
 
 @app.route("/")
