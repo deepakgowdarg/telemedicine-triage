@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}My Conditions{% endblock %}
+
+{% block content %}
+<div class="card p-4 mb-4">
+    <h2 class="mb-3">My medical conditions</h2>
+    <p class="text-muted">Add a condition if you have one. This helps the system check the right warning signs for you. It does not diagnose anything.</p>
+
+    <form method="POST" action="{{ url_for('patient.conditions') }}">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Condition</label>
+            <select name="condition_id" class="form-select" required>
+                <option value="">Choose one</option>
+                {% for c in all_conditions %}
+                <option value="{{ c.condition_id }}">{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Date of diagnosis (if known)</label>
+            <input type="date" name="diagnosis_date" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Treating doctor (if known)</label>
+            <input type="text" name="treating_doctor" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Add condition</button>
+    </form>
+</div>
+
+<div class="card p-4">
+    <h4 class="mb-3">Conditions on my profile</h4>
+    {% if my_conditions %}
+    <table class="table">
+        <thead>
+            <tr><th>Condition</th><th>Diagnosed</th><th>Treating doctor</th></tr>
+        </thead>
+        <tbody>
+            {% for c in my_conditions %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td>{{ c.diagnosis_date or '-' }}</td>
+                <td>{{ c.treating_doctor or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No conditions added yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

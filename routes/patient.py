@@ -142,3 +142,66 @@ def result(record_id):
         return redirect(url_for("patient.dashboard"))
 
     return render_template("triage_result.html", r=row, labels=LABELS)
+@patient_bp.route("/conditions", methods=["GET", "POST"])
+def conditions():
+    if not is_patient():
+        return redirect(url_for("auth.login"))
+
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        patient_id = get_patient_id(cursor, session["user_id"])
+        if patient_id is None:
+            flash("Your patient profile was not found. Please register again.", "danger")
+            return redirect(url_for("auth.register"))
+
+        if request.method == "POST":
+            condition_id = request.form.get("condition_id", "")
+            diagnosis_date = request.form.get("diagnosis_date") or None
+            treating_doctor = request.form.get("treating_doctor", "").strip() or None
+
+            if not condition_id.isdigit():
+                flash("Please choose a condition.", "danger")
+            else:
+                cursor.execute(
+                    """
+                    INSERT IGNORE INTO patient_conditions
+                        (patient_id, condition_id, diagnosis_date, treating_doctor)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    (patient_id, int(condition_id), diagnosis_date, treating_doctor),
+                )
+                conn.commit()
+                if cursor.rowcount:
+                    flash("Condition added.", "success")
+                else:
+                    flash("You have already added this condition.", "info")
+            return redirect(url_for("patient.conditions"))
+
+        cursor.execute("SELECT condition_id, name FROM special_conditions ORDER BY name")
+        all_conditions = cursor.fetchall()
+
+        cursor.execute(
+            """
+            SELECT sc.name, pc.diagnosis_date, pc.treating_doctor
+            FROM patient_conditions pc
+            JOIN special_conditions sc ON sc.condition_id = pc.condition_id
+            WHERE pc.patient_id = %s
+            ORDER BY sc.name
+            """,
+            (patient_id,),
+        )
+        my_conditions = cursor.fetchall()
+    except mysql.connector.Error:
+        conn.rollback()
+        flash("Could not save right now. Please try again.", "danger")
+        return redirect(url_for("patient.dashboard"))
+    finally:
+        cursor.close()
+        conn.close()
+
+    return render_template(
+        "conditions.html",
+        all_conditions=all_conditions,
+        my_conditions=my_conditions,
+    )
